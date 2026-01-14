@@ -1,0 +1,83 @@
+"use client";
+import { Heart, Swords, Shield, Zap, Activity, Wind, BarChart3 } from "lucide-react";
+import StatsChart from "./StatsChart";
+
+export default function StatsDetails({ selectedPokemon }) {
+  const getStatIcon = (name) => {
+    switch(name) {
+      case 'hp': return <Heart className="w-4 h-4 text-red-500" />;
+      case 'attack': return <Swords className="w-4 h-4 text-orange-500" />;
+      case 'defense': return <Shield className="w-4 h-4 text-blue-500" />;
+      case 'special-attack': return <Zap className="w-4 h-4 text-yellow-500" />;
+      case 'special-defense': return <Activity className="w-4 h-4 text-teal-500" />;
+      case 'speed': return <Wind className="w-4 h-4 text-sky-500" />;
+      default: return <BarChart3 className="w-4 h-4" />;
+    }
+  };
+
+  return (
+    <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
+      <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+        <div className="bg-gradient-to-br from-red-500 to-red-700 p-8 flex flex-col items-center text-white">
+          <img 
+            src={selectedPokemon.sprites.other['official-artwork'].front_default} 
+            alt={selectedPokemon.name}
+            className="w-48 h-48 object-contain drop-shadow-2xl mb-4"
+          />
+          <h2 className="text-3xl font-black capitalize tracking-tight">{selectedPokemon.name}</h2>
+          <div className="flex gap-2 mt-2">
+            {selectedPokemon.types.map(t => (
+              <span key={t.type.name} className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-lg text-xs font-bold uppercase tracking-wider">
+                {t.type.name}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="p-6 space-y-6">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="p-3 bg-gray-50 rounded-xl text-center">
+              <span className="block text-xs font-bold text-gray-400 uppercase tracking-widest">Height</span>
+              <span className="text-lg font-black text-gray-700">{selectedPokemon.height / 10}m</span>
+            </div>
+            <div className="p-3 bg-gray-50 rounded-xl text-center">
+              <span className="block text-xs font-bold text-gray-400 uppercase tracking-widest">Weight</span>
+              <span className="text-lg font-black text-gray-700">{selectedPokemon.weight / 10}kg</span>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+              <BarChart3 className="w-4 h-4" /> Base Stats
+            </h3>
+            <div className="space-y-3">
+              {selectedPokemon.stats.map(s => (
+                <div key={s.stat.name} className="space-y-1">
+                  <div className="flex justify-between text-xs font-bold uppercase tracking-tighter">
+                    <span className="flex items-center gap-2 text-gray-600">
+                      {getStatIcon(s.stat.name)} {s.stat.name.replace('-', ' ')}
+                    </span>
+                    <span className="text-gray-900">{s.base_stat}</span>
+                  </div>
+                  <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-red-500 rounded-full transition-all duration-1000" 
+                      style={{ width: `${Math.min(100, (s.base_stat / 150) * 100)}%` }}
+                    ></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="pt-2">
+            <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+              <Activity className="w-4 h-4" /> Stat Distribution
+            </h3>
+            <StatsChart pokemon={selectedPokemon} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

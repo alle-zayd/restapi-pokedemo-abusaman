@@ -1,4 +1,3 @@
-import Navbar from "./components/Navbar";
 import ClientWrapper from "./components/ClientWrapper";
 
 async function fetchPokemon(limit = 20) {
@@ -16,11 +15,11 @@ async function fetchPokemon(limit = 20) {
 }
 
 export default async function Page() {
-  const data = await fetchPokemon(12);
+  const data = await fetchPokemon(20);
 
   return (
-    <main className="p-6 space-y-6">
-      <ClientWrapper data={data} />
+    <main className="min-h-screen bg-gray-50 font-sans text-gray-900">
+      <ClientWrapper initialData={data} />
     </main>
   );
 }
